@@ -17,6 +17,9 @@ class AssistantViewController: NSViewController, ConversationTextDelegate, AVAud
     @IBOutlet weak var microphoneButton: NSButton!
     @IBOutlet weak var speakerButton: NSButton!
     @IBOutlet weak var spokenTextLabel: NSTextField!
+    
+    private let settingsWindow = NSWindowController(windowNibName: "PreferencesWindow")
+    
     private var player: AVAudioPlayer?
     
     
@@ -73,7 +76,7 @@ class AssistantViewController: NSViewController, ConversationTextDelegate, AVAud
         plot.shouldOptimizeForRealtimePlot = true
         plot.plotType = .buffer
         waveformView.addSubview(plot)
-        Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(self.updatePlotWaveformColor), userInfo: nil, repeats: true);
+        Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(self.updatePlotWaveformColor), userInfo: nil, repeats: true)
     }
     
     func updatePlotWaveformColor() {
@@ -163,6 +166,15 @@ class AssistantViewController: NSViewController, ConversationTextDelegate, AVAud
         if let event = NSApp.currentEvent, let menu = gearIcon.menu {
             NSMenu.popUpContextMenu(menu, with: event, for: gearIcon)
         }
+    }
+    
+    @IBAction func settingsClicked(_ sender: Any) {
+        settingsWindow.showWindow(sender)
+    }
+    
+    @IBAction func logoutClicked(_ sender: Any) {
+        // will perform logout actions via KVO in AppDelegate
+        UserDefaults.standard.set(false, forKey: Constants.LOGGED_IN_KEY)
     }
     
     @IBAction func quitClicked(_ sender: Any) {
